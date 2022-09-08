@@ -1,0 +1,13 @@
+{
+  "extends": "@tsconfig/node16/tsconfig.json",
+  "compilerOptions": {
+    "strict": true
+  },
+  "include": [
+    "frameworks/**/*.ts",
+    "tools/**/*.ts",
+    "lib/**/*.ts",
+    "examples/**/*.ts",
+    "tests/**/*.ts"
+  ]
+}
