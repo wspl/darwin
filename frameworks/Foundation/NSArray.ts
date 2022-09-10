@@ -8,10 +8,10 @@ export class NSArray<Item> extends NSObject {
   constructor(id: Buffer, public _type: NativeType) {
     super(id)
   }
-  static new<T extends NativeType>(type: T) {
-    return new NSArray<NativeValue<T>>(msgSend(alloc('NSArray'), 'init', CType.ptr), type)
-  }
+  static alloc<T extends NativeType>(type: T) { return new NSArray<NativeValue<T>>(alloc('NSArray'), type) }
+  init() { return this._instancetype(msgSend(this._id, 'init', CType.ptr)) }
+  
   arrayByAddingObject(item: Item) {
     msgSend(this._id, { arrayByAddingObject: { type: this._type as any, value: toArg(item) } }, CType.ptr)
   }
- }
+}
