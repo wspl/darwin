@@ -213,7 +213,7 @@ function genMethods(methods: any[], ast: any, ident: string, filter: string) {
       t.params.map((t: any, i: number) =>
         `${t.name}: ${args[i].ts}`
       ).join(', ')
-    }) { return ${ret.id ? `${ret.this ? 'this._instancetype' : ret.ts}(${msgSendExp})` : msgSendExp} }`
+    }) { return ${ret.id ? `${ret.this ? 'this._instancetype' : `new ${ret.ts}`}(${msgSendExp})` : msgSendExp} }`
   }).join('\n')
 }
 
