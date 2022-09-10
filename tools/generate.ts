@@ -75,6 +75,7 @@ async function getAST(framework: string) {
 async function searchIdent(framework: string, ident: string) {
   const ast = await getAST(framework)
   const items = ast.inner.filter((t: any) => t.name === ident || t.interface?.name === ident)
+  // fs.writeFileSync('./filtered.json', JSON.stringify(items))
   
   const methods: any[] = []
   const properties: any[] = []
@@ -100,7 +101,8 @@ async function searchIdent(framework: string, ident: string) {
                 .split('\n')[t.range.begin.expansionLoc.line - 1]
                 .slice(t.range.begin.expansionLoc.col - 1, t.range.begin.expansionLoc.col + t.range.begin.expansionLoc.tokLen - 1)
               === 'API_DEPRECATED'
-          }) ?? false
+          }) ?? false,
+          static: t.instance === false
         })   
       })
 
@@ -198,7 +200,7 @@ function genMethods(methods: any[], ast: any, ident: string, filter: string) {
     const args = t.params.map((t: any) => astTypeToTSType(t.type, ast))
     const ret = astTypeToTSType(t.returnType, ast)
   
-    const msgSendExp = `msgSend(this._id, ${
+    const msgSendExp = `msgSend(${t.static ? `getClass('${ident}')` : 'this._id'}, ${
       t.params.length === 0 ?
         `'${t.name}'` :
         `{ ${
@@ -207,7 +209,7 @@ function genMethods(methods: any[], ast: any, ident: string, filter: string) {
           ).join(', ')} }`
     }, ${ret.c})`
 
-    return `${methodName}(${
+    return `${t.static ? 'static ' : ''}${methodName}(${
       t.params.map((t: any, i: number) =>
         `${t.name}: ${args[i].ts}`
       ).join(', ')
