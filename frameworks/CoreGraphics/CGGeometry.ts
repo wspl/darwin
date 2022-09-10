@@ -18,4 +18,15 @@ export const CGRect = defineStruct({
   size: CGSize
 })
 
-console.log(CGSize.size, CGPoint.size, CGRect.size)
+export function CGMakeRect(x: number, y: number, w: number, h: number) {
+  return new CGRect({
+    origin: new CGPoint({
+      x,
+      y
+    }),
+    size: new CGSize({
+      width: w,
+      height: h
+    })
+  })
+}
